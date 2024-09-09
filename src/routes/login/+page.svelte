@@ -25,8 +25,8 @@
                 });
 
                 if (res.status === 200) {
-                    alert('Login successful!');
-                    loginUser({ email, name: res.data.name });
+                    console.log('Login response:', res.data);
+                    loginUser({ email, name: res.data.name, id: res.data.userId });
                     window.location.href = '/contacts';
                 } else {
                     alert('Invalid credentials.');

@@ -4,20 +4,30 @@
 </script>
 
 <div class="contact-card">
-    <img src={contactCardImage} alt="" class="contact-card__img">
+    {#if contactCardImage}
+        <img src={contactCardImage} alt="" class="contact-card__img">
+    {:else}
+        <div class="contact-card__default-image"></div>
+    {/if}
     <p class="contact-card__name">{contactCardName}</p>
 </div>
 
 <style lang="sass">
   .contact-card
     display: flex
-    flex-direction: column
+    flex-direction: row
     align-items: center
-    .contact-card__img
+    &__img
       width: 48px
       height: 48px
       border-radius: 50%
       margin-right: 24px
-    .contact-card__name
+    &__name
       font-size: 20px
+    &__default-image
+      width: 48px
+      height: 48px
+      border-radius: 50%
+      background-color: #D9D9D9
+      margin-right: 24px
 </style>
