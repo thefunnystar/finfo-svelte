@@ -10,7 +10,6 @@
 
     const contacts = writable([]);
 
-    // Fetch contacts on mount
     onMount(() => {
         if (!$user.isLoggedIn) {
             window.location.href = '/logged-out';
@@ -19,17 +18,15 @@
         }
     });
 
-    // Function to fetch contacts based on user email
     async function fetchContacts() {
         let userEmail;
 
         user.subscribe(value => {
-            userEmail = value.email;  // Get the user's email from the store
+            userEmail = value.email;
         })();
 
         if (userEmail) {
             try {
-                // Fetch contacts by email
                 const response = await axios.get(`http://localhost:5000/contacts/${userEmail}`);
                 contacts.set(response.data);
                 console.log('Contacts fetched:', response.data);
@@ -41,7 +38,6 @@
         }
     }
 
-    // Redirect to add contact page
     function handleAdd() {
         window.location.href = '/add-contact';
     }
@@ -51,7 +47,7 @@
     <Header headerText="Contacts" />
     <div class="contacts">
         {#each $contacts as contact}
-            <a href={`/contacts/${contact.id}`} class="contacts__contact">
+            <a href={`/contact/${contact._id}`} class="contacts__contact">
                 <ContactCard contactCardImage={contact.contactPhoto || ''} contactCardName={contact.contactName} />
             </a>
         {/each}

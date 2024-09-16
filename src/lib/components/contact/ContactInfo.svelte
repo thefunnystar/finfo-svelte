@@ -6,9 +6,13 @@
 </script>
 
 <div class="contact-info">
-    <img src={contactInfoImage} alt="" class="contact-info__img">
+    {#if contactInfoImage}
+        <img src={contactInfoImage} alt="" class="contact-info__img">
+    {:else}
+        <div class="contact-info__default-image"></div>
+    {/if}
     <p class="contact-info__name">{contactInfoName}</p>
-    <p class="contact-info__id">{contactInfoID}</p>
+    <p class="contact-info__id">ID: {contactInfoID}</p>
     <p class="contact-info__relationship">{contactInfoRelationship}</p>
 </div>
 
@@ -17,17 +21,23 @@
     display: flex
     align-items: center
     flex-direction: column
-    .contact-info__img
+    &__img
       width: 128px
       height: 128px
       border-radius: 50%
       margin: 32px auto
-    .contact-info__name
+    &__default-image
+        width: 128px
+        height: 128px
+        border-radius: 50%
+        margin: 32px auto
+        background-color: #D9D9D9
+    &__name
       font-size: 20px
-    .contact-info__id
+    &__id
       margin-top: 8px
       font-size: 14px
-    .contact-info__relationship
+    &__relationship
       margin-top: 8px
       font-size: 14px
 </style>

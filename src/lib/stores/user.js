@@ -5,7 +5,7 @@ const storedUser = (typeof window !== 'undefined' && JSON.parse(localStorage.get
     isLoggedIn: false,
     email: '',
     name: '',
-    id: '' // Add userId here
+    id: ''
 };
 
 export const user = writable(storedUser);
@@ -21,7 +21,7 @@ export function loginUser(userInfo) {
         isLoggedIn: true,
         email: userInfo.email,
         name: userInfo.name,
-        id: userInfo.id // Ensure you store the userId here
+        id: userInfo.id
     });
 }
 
@@ -30,7 +30,7 @@ export function logoutUser() {
         isLoggedIn: false,
         email: '',
         name: '',
-        id: '' // Reset the userId on logout
+        id: ''
     });
     if (typeof window !== 'undefined') {
         localStorage.removeItem('user');

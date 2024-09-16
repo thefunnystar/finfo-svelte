@@ -1,37 +1,41 @@
 <script>
     import TopBar from "$components/TopBar.svelte";
     import IO from "$components/IO.svelte";
+    import AddImage from "$components/AddImage.svelte";
     import ButtonLarge from "$components/btn/ButtonLarge.svelte";
     import Header from "$components/Header.svelte";
     import axios from 'axios';
-    import { user } from "$stores/user.js"; // Assume user store contains the logged-in user's details
+    import { user } from "$stores/user.js";
 
     let contactName = "";
     let relationship = "";
+    let contactId = "";
+    let contactPhoto = "";
 
     async function handleAdd() {
         let userEmail;
 
-        // Get the email from the user store
         user.subscribe(value => {
-            userEmail = value.email; // Get the user's email from the store
+            userEmail = value.email;
         })();
 
         if (userEmail) {
             const payload = {
-                userEmail,  // Include the email in the payload instead of userId
-                contactName, // Assuming contactName is defined elsewhere
-                relationship // Assuming relationship is defined elsewhere
+                userEmail,
+                contactName,
+                relationship,
+                contactId,
+                contactPhoto
             };
 
-            console.log(payload);  // Check if userEmail is properly fetched
+            console.log(payload);
 
             try {
                 const response = await axios.post('http://localhost:5000/contacts/add', payload);
 
                 if (response.status === 201) {
                     alert('Contact added successfully');
-                    window.location.href = '/contacts';  // Redirect or refresh the page
+                    window.location.href = '/contacts';
                 }
             } catch (err) {
                 console.error('Error adding contact:', err);
@@ -42,7 +46,9 @@
         }
     }
 
-
+    function handleImageUpload(imageUrl) {
+        contactPhoto = imageUrl;
+    }
 </script>
 
 <div class="add-container">
@@ -55,18 +61,23 @@
         <div class="add__io">
             <IO io="enterRelationship" ioLabel="Relationship" bind:ioValue={relationship} />
         </div>
+        <div class="add__io add__io-2">
+            <IO io="enterContactId" ioLabel="Contact Id (optional)" bind:ioValue={contactId} />
+        </div>
+        <div class="add__image">
+            <AddImage onUploadComplete={handleImageUpload} />
+        </div>
     </div>
     <div class="add__button" on:click={handleAdd}>
         <ButtonLarge btnText="Add" />
     </div>
 </div>
 
-
 <style lang="sass">
   .add
     display: flex
     flex-direction: column
-    margin: 64px 0
+    margin: 0
     &__io
       margin: 0 auto
       &-2

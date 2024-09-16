@@ -7,6 +7,7 @@
     import ButtonLarge from "$components/btn/ButtonLarge.svelte";
 
     let accountSettingsName = '';
+    let profilePhoto = '';
 
     onMount(() => {
         if (!$user.isLoggedIn) {
@@ -14,25 +15,23 @@
         }
 
         const unsubscribe = user.subscribe(value => {
-            accountSettingsName = value.name || 'Unknown User'; // Default if name is missing
+            accountSettingsName = value.name || 'Unknown User';
         });
 
-        return () => unsubscribe(); // Cleanup on destroy
+        return () => unsubscribe();
     });
 
     async function changeName() {
         let email;
         user.subscribe(value => {
-            email = value.email || ''; // Get email from user object in the store
+            email = value.email || '';
         })();
 
         const newName = prompt("Enter your new name:", accountSettingsName);
         if (newName && newName !== accountSettingsName) {
             try {
-                // Send request to backend to update the name
                 const response = await axios.put("http://localhost:5000/users/updateName", { email, newName });
                 if (response.status === 200) {
-                    // Update name in local storage only after the backend confirms success
                     user.update((currentUser) => {
                         currentUser.name = newName;
                         localStorage.setItem("user", JSON.stringify(currentUser));
@@ -51,17 +50,15 @@
         }
     }
 
-    //logout and then try 'pass'
     async function changePassword() {
         let email;
         user.subscribe(value => {
-            email = value.email || ''; // Get email from user object in the store
+            email = value.email || '';
         })();
 
         const newPassword = prompt("Enter your new password:");
         if (newPassword) {
             try {
-                // Send email and newPassword to the backend
                 const response = await axios.put("http://localhost:5000/users/updatePassword", { email, newPassword });
                 if (response.status === 200) {
                     alert("Password changed successfully!");
@@ -89,21 +86,24 @@
 
 <div class="account-settings-container">
     <div class="account-settings">
-        <img src="" alt="" class="account-settings__img">
-        <p class="account-settings__add-photo" on:click={changePhoto}>add/change photo</p>
+        {#if profilePhoto}
+            <img src={profilePhoto} alt="" class="account-settings__img">
+        {:else}
+            <div class="account-settings__default-image"></div>
+        {/if}
         <p class="account-settings__name">{accountSettingsName}</p>
+        <p class="account-settings__add-photo" on:click={changePhoto}>add/change photo</p>
         <div class="account-settings__buttons">
-            <!-- Correctly bind the click event to the button element -->
-            <button class="account-settings__buttons--btn" on:click={changeName}>
+            <div class="account-settings__buttons--btn" on:click={changeName}>
                 <ButtonMedium btnText="Change Your Name" />
-            </button>
-            <button class="account-settings__buttons--btn" on:click={changePassword}>
-                <ButtonMedium btnText="Change Your Password" />
-            </button>
+            </div>
+            <div class="account-settings__buttons--btn" on:click={changePassword}>
+                <ButtonMedium btnText="Update Password" />
+            </div>
         </div>
-        <button class="account-settings__logout" on:click={handleLogout}>
+        <div class="account-settings__logout" on:click={handleLogout}>
             <ButtonLarge btnText="Logout" />
-        </button>
+        </div>
     </div>
     <div class="account-settings-footer">
         <Footer />
@@ -124,10 +124,18 @@
       width: 128px
       height: 128px
       border-radius: 50%
+      object-fit: cover
+      background-color: #D9D9D9
+      margin-bottom: 16px
+    &__default-image
+      width: 128px
+      height: 128px
+      border-radius: 50%
       background-color: #D9D9D9
       margin-bottom: 16px
     &__add-photo
-      font-size: 12px
+      cursor: pointer
+      font-size: 16px
       margin-bottom: 32px
     &__name
       font-size: 20px

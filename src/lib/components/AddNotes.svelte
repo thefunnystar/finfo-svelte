@@ -6,18 +6,24 @@
 
 <div class="io">
     <label for={io} class="io__label">{ioLabel}</label>
-    <input type="text" id={io} name={io} class="io__input" bind:value={ioValue} />
+    <textarea
+            id={io}
+            name={io}
+            class="io__input"
+            bind:value={ioValue}
+    />
 </div>
 
 <style lang="sass">
   .io
-    width: 264px
+    width: 296px
+    height: 296px
     &__label
       font-size: 20px
     &__input
       margin-top: 16px
       width: 100%
-      height: 32px
+      height: 100%
       padding: 8px
       font-size: 16px
       border: 1px solid #ccc
